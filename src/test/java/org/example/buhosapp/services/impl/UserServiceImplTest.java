@@ -1,10 +1,11 @@
 package org.example.buhosapp.services.impl;
 
+import org.example.buhosapp.domain.dtos.request.user.CreateUserRequest;
 import org.example.buhosapp.domain.entities.Role;
 import org.example.buhosapp.domain.entities.User;
-import org.example.buhosapp.domain.dto.CreateUserRequest;
-import org.example.buhosapp.domain.dto.UserResponse;
-import org.example.buhosapp.domain.dto.RoleResponse;
+import org.example.buhosapp.domain.dtos.request.role.CreateRoleRequest;
+import org.example.buhosapp.domain.dtos.response.role.RoleResponse;
+import org.example.buhosapp.domain.dtos.response.user.UserResponse;
 import org.example.buhosapp.repositories.UserRepository;
 import org.example.buhosapp.services.impl.RoleServiceImpl;
 import org.example.buhosapp.services.impl.UserServiceImpl;
@@ -64,7 +65,6 @@ public class UserServiceImplTest {
 
         roleResponse = RoleResponse.builder()
                 .id(roleId)
-                .name("student")
                 .build();
 
         roleEntity = Role.builder()
