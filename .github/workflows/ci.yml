@@ -1,0 +1,75 @@
+name: Merge to develop & main
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Maven Build and Unit Tests
+        run: ./mvnw clean verify -B
+
+      - name: Publish Test Reports Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: target/surefire-reports/
+
+  smoke-test-compose:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Inject Temporal Env for Smoke Test
+        run: |
+          cat <<END > .env
+          DATABASE_NAME=buhosapp_ci
+          DATABASE_USERNAME=ci_user
+          DATABASE_PASSWORD=ci_password
+          SPRING_JPA_SHOW_SQL=false
+          SPRING_JPA_HIBERNATE_DDL=update
+          SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+          SPRING_APPLICATION_NAME=app-smoke-test
+          END
+
+      - name: Run Docker Compose Environment
+        run: docker compose up --build -d
+
+      - name: Execute Smoke Test Curl
+        run: |
+          for i in $(seq 1 15); do
+            if curl -s http://localhost:8080/api/role/get/nonexistent -o /dev/null; then
+              echo "¡La aplicación arrancó y respondió de manera correcta!"
+              exit 0
+            fi
+            echo "Esperando inicialización del servidor... ($i/15)"
+            sleep 3
+          done
+          echo "Error crónico: La aplicación excedió el tiempo límite de inicio."
+          exit 1
+
+      - name: Capture Container Logs on Failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Teardown Infrastructure
+        if: always()
+        run: docker compose down -v
