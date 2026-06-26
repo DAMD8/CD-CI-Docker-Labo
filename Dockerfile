@@ -2,12 +2,17 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Descarga de dependencias en caché de Docker
+# Copiar el wrapper y el pom
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+
+# Forzar el permiso de ejecución directo en Linux
+RUN chmod +x mvnw
+
+# Descarga de dependencias en caché de Docker
 RUN ./mvnw dependency:go-offline -B
 
-# Copia de código fuente y empaquetado sin ejecutar pruebas (CI las correrá)
+# Copia de código fuente y empaquetado
 COPY src ./src
 RUN ./mvnw clean package -DskipTests -B
 
@@ -15,11 +20,9 @@ RUN ./mvnw clean package -DskipTests -B
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Cumplimiento de restricción: Usuario sin privilegios Root
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# Copiar el compilado ejecutable desde la etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
