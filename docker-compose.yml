@@ -1,5 +1,6 @@
+version: '3.8'
+
 services:
-  # Servicio 1: PostgreSQL
   db:
     image: postgres:16-alpine
     container_name: buhosapp-db
@@ -21,10 +22,9 @@ services:
       - buhos-network
 
   app:
-    # Servicio 2: Backend
     build:
-      context: Buhos-App-main
-      dockerfile: Buhos-App-main/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: buhos-api
     restart: on-failure
     depends_on:
