@@ -6,13 +6,13 @@ WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 
-# Forzar el permiso de ejecución directo en Linux
+# Le damos permisos dentro del contenedor Linux de Docker
 RUN chmod +x mvnw
 
 # Descarga de dependencias en caché de Docker
 RUN ./mvnw dependency:go-offline -B
 
-# Copia de código fuente y empaquetado
+# Copia de código fuente y empaquetado sin ejecutar pruebas
 COPY src ./src
 RUN ./mvnw clean package -DskipTests -B
 
