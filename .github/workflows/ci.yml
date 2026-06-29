@@ -56,8 +56,9 @@ jobs:
       - name: Execute Smoke Test Curl
         run: |
           for i in $(seq 1 15); do
-            if curl -s http://localhost:8080/api/devops -o /dev/null; then
-              echo "¡La aplicación arrancó y respondió de manera correcta!"
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || true)
+            if [ "$HTTP_CODE" != "000" ]; then
+              echo "¡La aplicación arrancó y respondió con código HTTP: $HTTP_CODE!"
               exit 0
             fi
             echo "Esperando inicialización del servidor... ($i/15)"
