@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:16-alpine
-    container_name: buhosapp-db
+    container_name: legacy-postgres-db
     restart: always
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
@@ -12,20 +12,20 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - buhosapp-db-data:/var/lib/postgresql/data
+      - legacy-postgres-db-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
     networks:
-      - buhos-network
+      - legacy-network
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: buhos-api
+    container_name: legacy-api
     restart: on-failure
     depends_on:
       db:
@@ -41,11 +41,11 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - buhos-network
+      - legacy-network
 
 networks:
-  buhos-network:
+  legacy-network:
 
 volumes:
-  buhosapp-db-data:
+  legacy-postgres-db-data:
     driver: local
