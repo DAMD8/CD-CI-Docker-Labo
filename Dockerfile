@@ -1,30 +1,15 @@
-# ---------- Etapa 1: Compilación ----------
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copiar el wrapper y el pom
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-
-# Le damos permisos dentro del contenedor Linux de Docker
-RUN chmod +x mvnw
-
-# Descarga de dependencias en caché de Docker
-RUN ./mvnw dependency:go-offline -B
-
-# Copia de código fuente y empaquetado sin ejecutar pruebas
+COPY pom.xml .
 COPY src ./src
-RUN ./mvnw clean package -DskipTests -B
+RUN mvn clean package -DskipTests
 
-# ---------- Etapa 2: Imagen de Ejecución ----------
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup --system spring && adduser --system spring --ingroup spring
 USER spring:spring
 
-COPY --from=build /app/target/*.jar app.jar
-
+COPY --from=build /app/target/devops-legacy-api-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
