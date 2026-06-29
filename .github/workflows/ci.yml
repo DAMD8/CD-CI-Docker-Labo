@@ -41,13 +41,13 @@ jobs:
       - name: Inject Temporal Env for Smoke Test
         run: |
           cat <<END > .env
-          DATABASE_NAME=buhosapp_ci
-          DATABASE_USERNAME=ci_user
-          DATABASE_PASSWORD=ci_password
+          DATABASE_NAME=devops_legacy_ci
+          DATABASE_USERNAME=ci_devops_user
+          DATABASE_PASSWORD=ci_devops_password
           SPRING_JPA_SHOW_SQL=false
           SPRING_JPA_HIBERNATE_DDL=update
           SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
-          SPRING_APPLICATION_NAME=app-smoke-test
+          SPRING_APPLICATION_NAME=devops-smoke-test
           END
 
       - name: Run Docker Compose Environment
@@ -56,7 +56,7 @@ jobs:
       - name: Execute Smoke Test Curl
         run: |
           for i in $(seq 1 15); do
-            if curl -s http://localhost:8080/api/role/get/nonexistent -o /dev/null; then
+            if curl -s http://localhost:8080/api/devops -o /dev/null; then
               echo "¡La aplicación arrancó y respondió de manera correcta!"
               exit 0
             fi
