@@ -1,16 +1,12 @@
-package org.example.buhosapp.services.impl;
+package org.example.DevOps.services.impl;
 
-import org.example.buhosapp.domain.dtos.request.user.CreateUserRequest;
-import org.example.buhosapp.domain.entities.Role;
-import org.example.buhosapp.domain.entities.User;
-import org.example.buhosapp.domain.dtos.request.role.CreateRoleRequest;
-import org.example.buhosapp.domain.dtos.response.role.RoleResponse;
-import org.example.buhosapp.domain.dtos.response.user.UserResponse;
-import org.example.buhosapp.repositories.UserRepository;
-import org.example.buhosapp.services.impl.RoleServiceImpl;
-import org.example.buhosapp.services.impl.UserServiceImpl;
-import org.example.buhosapp.common.mappers.UserMapper;
-import org.example.buhosapp.common.mappers.RoleMapper;
+import org.example.DevOps.domain.dtos.request.user.CreateUserRequest;
+import org.example.DevOps.domain.entities.Role;
+import org.example.DevOps.domain.entities.User;
+import org.example.DevOps.domain.dtos.response.role.RoleResponse;
+import org.example.DevOps.domain.dtos.response.user.UserResponse;
+import org.example.DevOps.common.mappers.UserMapper;
+import org.example.DevOps.common.mappers.RoleMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,11 +1,10 @@
-package org.example.buhosapp.controllers;
+package org.example.DevOps.controllers;
 
-import org.example.buhosapp.domain.dtos.response.ApiErrorResponse;
-import org.example.buhosapp.exceptions.ResourceNotFoundException;
+import org.example.DevOps.domain.dtos.response.ApiErrorResponse;
+import org.example.DevOps.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

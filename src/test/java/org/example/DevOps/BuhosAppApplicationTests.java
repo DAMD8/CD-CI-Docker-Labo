@@ -1,4 +1,4 @@
-package org.example.buhosapp;
+package org.example.DevOps;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
